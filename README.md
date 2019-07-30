@@ -7,6 +7,10 @@ into a LoRa Server [common protocol](https://github.com/brocaar/loraserver/blob/
 This project is part of the [LoRa Server](https://github.com/brocaar/loraserver)
 project.
 
+LoRa网关桥接器，桥接网关和MQTT Broker,进而连接Lora Network Server：  
+* 将网关推送的上行数据包（LGMP协议）转换成通用的JSON和Protobuf数据，并转发到MQTT Broker上；  
+* 同时监听MQTT Broker消息，将下行数据并将其用UDP协议发送到网关上。  
+
 ## Backends
 
 The following packet-forwarder backends are provided:
@@ -14,7 +18,8 @@ The following packet-forwarder backends are provided:
 * [Semtech UDP packet-forwarder](https://github.com/Lora-net/packet_forwarder)
 * [Basic Station packet-forwarder](https://github.com/lorabasics/basicstation)
 
-该组件主要实现LoRa网关消息协议(LoRa Gateway Message Protocol。在internal/backend文件夹下面。  
+该组件主要实现LoRa网关消息协议(LoRa Gateway Message Protocol)。  
+在internal/backend文件夹下面。  
 
 ## Integrations
 
@@ -42,7 +47,7 @@ cmd/lora-gateway-bridge/cmd/root_run.go
 ### Component links
 
 * [LoRa Gateway Bridge](https://www.loraserver.io/lora-gateway-bridge)
-* [LoRa Gateway Config](https://www.loraserver.io/lora-gateway-bridge/install/config)
+* [LoRa Gateway Bridge Config](https://www.loraserver.io/lora-gateway-bridge/install/config)
 * [LoRa Server](https://www.loraserver.io/loraserver)
 * [LoRa App Server](https://www.loraserver.io/lora-app-server)
 
