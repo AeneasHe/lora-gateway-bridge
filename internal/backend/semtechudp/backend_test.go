@@ -91,6 +91,7 @@ func (ts *BackendTestSuite) TearDownTest() {
 	ts.gwUDPConn.Close()
 }
 
+// 测试拉取数据
 func (ts *BackendTestSuite) TestPullData() {
 	ts.T().Run("Send PullData", func(t *testing.T) {
 		assert := require.New(t)
@@ -190,6 +191,7 @@ func (ts *BackendTestSuite) TestTXAck() {
 	}
 }
 
+// 测试推送上传数据
 func (ts *BackendTestSuite) TestPushData() {
 	latitude := float64(1.234)
 	longitude := float64(2.123)
@@ -201,6 +203,7 @@ func (ts *BackendTestSuite) TestPushData() {
 	compactTS := packets.CompactTime(now)
 	tmms := int64(time.Second / time.Millisecond)
 
+	//构造测试数据
 	testTable := []struct {
 		Name          string
 		GatewayPacket packets.PushDataPacket
@@ -365,6 +368,7 @@ func (ts *BackendTestSuite) TestPushData() {
 	}
 }
 
+//测试下发数据
 func (ts *BackendTestSuite) TestSendDownlinkFrame() {
 	assert := require.New(ts.T())
 
@@ -528,6 +532,7 @@ func (ts *BackendTestSuite) TestSendDownlinkFrame() {
 	}
 }
 
+//测试配置
 func (ts *BackendTestSuite) TestApplyConfiguration() {
 	testTable := []struct {
 		Name                    string

@@ -14,12 +14,26 @@ The following packet-forwarder backends are provided:
 * [Semtech UDP packet-forwarder](https://github.com/Lora-net/packet_forwarder)
 * [Basic Station packet-forwarder](https://github.com/lorabasics/basicstation)
 
+该组件主要实现LoRa网关消息协议(LoRa Gateway Message Protocol。在internal/backend文件夹下面。  
+
 ## Integrations
 
 The following integrations are provided:
 
 * Generic MQTT broker
 * [GCP Cloud IoT Core MQTT Bridge](https://cloud.google.com/iot-core/)
+
+该组件主要实现将Backends组件解析出来的消息发送到mqtt broker上。   
+在internal/integration文件夹下面。 
+
+## Forwarder
+
+该组件是本软件的主要入口，将Backends和Integrations组合到一起，实现网关桥接的主要功能，即将网关的消息（LGMP协议)转换成mqtt消息（MQTT协议）。  
+在internal/forwarder文件夹下面。  
+
+软件的实际启动入口:  
+cmd/lora-gateway-bridge/main.go  
+cmd/lora-gateway-bridge/cmd/root_run.go  
 
 ## Architecture
 

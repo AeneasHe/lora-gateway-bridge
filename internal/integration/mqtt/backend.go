@@ -24,20 +24,20 @@ import (
 type Backend struct {
 	sync.RWMutex
 
-	auth                     auth.Authentication
-	conn                     paho.Client
+	auth                     auth.Authentication //认证
+	conn                     paho.Client         //mqtt客户端
 	closed                   bool
-	clientOpts               *paho.ClientOptions
-	downlinkFrameChan        chan gw.DownlinkFrame
-	gatewayConfigurationChan chan gw.GatewayConfiguration
-	gateways                 map[lorawan.EUI64]struct{}
+	clientOpts               *paho.ClientOptions          //mqtt连接配置
+	downlinkFrameChan        chan gw.DownlinkFrame        //下行数据帧通道
+	gatewayConfigurationChan chan gw.GatewayConfiguration //网关配置通道
+	gateways                 map[lorawan.EUI64]struct{}   //网关表
 
 	qos                  uint8
-	eventTopicTemplate   *template.Template
-	commandTopicTemplate *template.Template
+	eventTopicTemplate   *template.Template //事件主题模版
+	commandTopicTemplate *template.Template //指令主题模版
 
-	marshal   func(msg proto.Message) ([]byte, error)
-	unmarshal func(b []byte, msg proto.Message) error
+	marshal   func(msg proto.Message) ([]byte, error) //系列化
+	unmarshal func(b []byte, msg proto.Message) error //逆系列化
 }
 
 // NewBackend creates a new Backend.
@@ -166,6 +166,7 @@ func (b *Backend) SubscribeGateway(gatewayID lorawan.EUI64) error {
 	return nil
 }
 
+// 监听网关
 func (b *Backend) subscribeGateway(gatewayID lorawan.EUI64) error {
 	topic := bytes.NewBuffer(nil)
 	if err := b.commandTopicTemplate.Execute(topic, struct{ GatewayID lorawan.EUI64 }{gatewayID}); err != nil {

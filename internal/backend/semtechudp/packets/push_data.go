@@ -18,6 +18,7 @@ import (
 // loRaDataRateRegex contains a regexp for parsing the data-rate string.
 var loRaDataRateRegex = regexp.MustCompile(`SF(\d+)BW(\d+)`)
 
+// 上行数据
 // PushDataPacket type is used by the gateway mainly to forward the RF packets
 // received, and associated metadata, to the server.
 type PushDataPacket struct {
@@ -44,6 +45,7 @@ func (p PushDataPacket) MarshalBinary() ([]byte, error) {
 	return out, nil
 }
 
+// 网关状态
 // GetGatewayStats returns the gw.GatewayStats object (if the packet contains stats).
 func (p PushDataPacket) GetGatewayStats() (*gw.GatewayStats, error) {
 	if p.Payload.Stat == nil {
@@ -52,10 +54,10 @@ func (p PushDataPacket) GetGatewayStats() (*gw.GatewayStats, error) {
 
 	stats := gw.GatewayStats{
 		GatewayId:           p.GatewayMAC[:],
-		RxPacketsReceived:   p.Payload.Stat.RXNb,
-		RxPacketsReceivedOk: p.Payload.Stat.RXOK,
-		TxPacketsEmitted:    p.Payload.Stat.TXNb,
-		TxPacketsReceived:   p.Payload.Stat.DWNb,
+		RxPacketsReceived:   p.Payload.Stat.RXNb, /* numberof RF frames have received */
+		RxPacketsReceivedOk: p.Payload.Stat.RXOK, /* numberof RF frames with correct CRC */
+		TxPacketsEmitted:    p.Payload.Stat.TXNb, /* numberof RF frames TX by gateway */
+		TxPacketsReceived:   p.Payload.Stat.DWNb, /* numberos RF frames RX from NS */
 	}
 
 	// time
@@ -82,6 +84,7 @@ func (p PushDataPacket) GetGatewayStats() (*gw.GatewayStats, error) {
 func (p PushDataPacket) GetUplinkFrames(skipCRCCheck bool, FakeRxInfoTime bool) ([]gw.UplinkFrame, error) {
 	var frames []gw.UplinkFrame
 
+	// RXPK上行数据数量
 	for i := range p.Payload.RXPK {
 		// validate CRC
 		if p.Payload.RXPK[i].Stat != 1 && !skipCRCCheck {
@@ -130,7 +133,7 @@ func setUplinkFrameRSig(frame gw.UplinkFrame, rxPK RXPK, rSig RSig) gw.UplinkFra
 
 func getUplinkFrame(gatewayID []byte, rxpk RXPK, FakeRxInfoTime bool) (gw.UplinkFrame, error) {
 	frame := gw.UplinkFrame{
-		PhyPayload: rxpk.Data,
+		PhyPayload: rxpk.Data, //物理负载
 		TxInfo: &gw.UplinkTXInfo{
 			Frequency: uint32(rxpk.Freq * 1000000),
 		},
@@ -238,6 +241,7 @@ type PushDataPayload struct {
 	Stat *Stat  `json:"stat,omitempty"`
 }
 
+// 网关状态
 // Stat contains the status of the gateway.
 type Stat struct {
 	Time ExpandedTime `json:"time"` // UTC 'system' time of the gateway, ISO 8601 'expanded' format (e.g 2014-01-12 08:59:28 GMT)
@@ -252,6 +256,7 @@ type Stat struct {
 	TXNb uint32       `json:"txnb"` // Number of packets emitted (unsigned integer)
 }
 
+// 上行数据包
 // RXPK contain a RF packet and associated metadata.
 type RXPK struct {
 	Time *CompactTime `json:"time"` // UTC time of pkt RX, us precision, ISO 8601 'compact' format (e.g. 2013-03-31T16:21:17.528002Z)
@@ -273,6 +278,7 @@ type RXPK struct {
 	RSig []RSig       `json:"rsig"` // Received signal information, per antenna (Optional)
 }
 
+// 接收信号
 // RSig contains the received signal information per antenna.
 type RSig struct {
 	Ant   uint8   `json:"ant"`   // Antenna number on which signal has been received

@@ -2,6 +2,7 @@
 
 package packets
 
+//数据包
 import (
 	"errors"
 	"strconv"
@@ -12,15 +13,33 @@ import (
 // PacketType defines the packet type.
 type PacketType byte
 
+// 参见http://www.loraapp.com/lora-university-case/201701211128/
+// LoRa Gateway Message Protocol
 // Available packet types
 const (
-	PushData PacketType = iota
+	PushData PacketType = iota //主要的上行数据包
 	PushACK
 	PullData
-	PullResp
+	PullResp //主要的下行数据包
 	PullACK
 	TXACK
 )
+
+//Push上行
+//Pull下行
+//ACK回应
+//DATA数据
+
+//PUSH_DATA PUSH_ACK：GW向NS提交上行RF数据包；
+//PULL_RESP TX_ACK：NS向GW提交下行RF数据包；
+//PULL_DATA PULL_ACK：GW向NS发送“心跳”以打开防火墙；
+
+//PUSH_DATA：GW向NS发送上行RF数据包，EUI用于区分不同的GW（一个NS可以连接多个GW），tocken用于区分不同的数据包（一般为自加一）。
+//PUSH_ACK：NS回应GW—成功接收该DATA数据包。
+//PULL_RESP：NS向GW发送下行RF数据包，tocken用于区分不同的数据包（一般为自加一）。
+//TX_ACK：GW回应NS—成功接收该RESP数据包。
+//PULL_DATA：GW向NS发送“心跳”数据包，EUI用于区分不同的GW（一个NS可以连接多个GW），tocken用于区分不同的数据包（一般为自加一）。
+//PULL_ACK：NS回应GW—成功接收该“心跳”数据包。
 
 // Protocol versions
 const (
@@ -46,6 +65,7 @@ func GetPacketType(data []byte) (PacketType, error) {
 	return PacketType(data[3]), nil
 }
 
+//是否支持的协议
 func protocolSupported(p uint8) bool {
 	if p == ProtocolVersion1 || p == ProtocolVersion2 {
 		return true

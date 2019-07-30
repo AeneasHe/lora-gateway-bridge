@@ -1,5 +1,6 @@
 package semtechudp
 
+// 用于集群监控
 import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"

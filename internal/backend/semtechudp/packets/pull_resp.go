@@ -60,6 +60,7 @@ type PullRespPayload struct {
 	TXPK TXPK `json:"txpk"`
 }
 
+// 下行数据包
 // TXPK contains a RF packet to be emitted and associated metadata.
 type TXPK struct {
 	Imme bool    `json:"imme"`           // Send packet immediately (will ignore tmst & time)

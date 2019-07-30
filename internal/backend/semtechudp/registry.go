@@ -1,5 +1,6 @@
 package semtechudp
 
+//网关及网关表的定义
 import (
 	"errors"
 	"net"
@@ -18,6 +19,7 @@ var (
 // cleaned up from the registry after no activity
 var gatewayCleanupDuration = -1 * time.Minute
 
+// 网关
 // gateway contains a connection and meta-data for a gateway connection.
 type gateway struct {
 	addr            *net.UDPAddr
@@ -25,6 +27,7 @@ type gateway struct {
 	protocolVersion uint8
 }
 
+// 网关表
 // gateways contains the gateways registry.
 type gateways struct {
 	sync.RWMutex
